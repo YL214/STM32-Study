@@ -1,0 +1,64 @@
+#define RCC_AHB1ENR  *(unsigned int *)(0x40023800 + 0x30)
+#define GPIOF_MODER  *(unsigned int *)(0x40021400 + 0x00)
+#define GPIOF_ODR    *(unsigned int *)(0x40021400 + 0x14)
+
+
+
+#include "stm32f4xx.h"
+/*===============================================================================================
+第一步：开启GPIO端口的时钟
+第二步：控制GPIO的方向
+================================================================================================*/
+void delay(int a);
+int main()
+{	
+	
+	/*打开GPIOF端口的时钟*/
+	RCC_AHB1ENR|=(1<<5);
+	//*(unsigned int *)(0x40023800+0x30) |=(1 << 5);
+	
+	/*GPIO配置为输出*/
+	GPIOF_MODER &=~ ( (0x03) << (2*6) );
+	GPIOF_MODER |= ( 1 << (2*6) );
+	/*GPIO配置为输出*/
+	GPIOF_MODER &=~( (0x03) << (2*7) );
+	GPIOF_MODER |= ((0x01) << (2*7) );
+	/*GPIO配置为输出*/
+	GPIOF_MODER &= ~( (0x03) << (2*8) );
+	GPIOF_MODER |= (1 << (2*8) );	
+	
+  while(1)
+  {	
+        /*PF6输出高电平*/
+        GPIOF_ODR|=(1<<6);
+        /*PF6输出低电平*/
+        delay(2000);
+        GPIOF_ODR &=~(1<<6);	
+
+        /*PF7输出高电平*/
+        GPIOF_ODR |= (1 << 7);
+        /*PF7输出低电平*/
+        delay(2000);
+        GPIOF_ODR &= ~(1 << 7);
+
+        /*PF8输出高电平*/
+        GPIOF_ODR |= (1 << 8 );
+        /*PF8输出低电平*/
+        delay(2000);
+        GPIOF_ODR &= ~(1 << 8 );
+
+  }	
+
+}
+void SystemInit(void)
+{
+	/**/
+}
+void delay(int a)
+{
+	for(int i=a;i>0;i--)
+	{
+		for(int j=a;j>0;j--)
+		;
+	}
+}	
